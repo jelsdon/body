@@ -11,7 +11,7 @@ void usage (int status) {
 
 
 /* Open the file */
-FILE open_file (char *filename) {
+FILE* open_file (char *filename) {
   FILE *fp;
   fp=fopen(filename, "r");
   if (fp == NULL) {
@@ -19,21 +19,22 @@ FILE open_file (char *filename) {
     exit(1);
   }
 
-  return *fp;
+  return fp;
 }
 
 /* http://pubs.opengroup.org/onlinepubs/9699919799/functions/getline.html */
 size_t file_lines (FILE *fp) {
   char *line = NULL;
   size_t len = 0;
+  size_t lines = 0;
   ssize_t read;
-  
   if ( fp == NULL )
     exit(1);
 
   while ((read = getline(&line, &len, fp)) != -1) {
-    printf("Retrieved line of length %zu :\n", read);
-    printf("%s", line);
+    // printf("Retrieved line of length %zu :\n", read);
+    // printf("%s", line);
+    lines++;
   }
 
   if (ferror(fp)) {
@@ -43,7 +44,7 @@ size_t file_lines (FILE *fp) {
 
   free(line);
 
-  return 0;
+  return lines;
 
 }
 
@@ -57,7 +58,9 @@ int main (int argc, char **argv) {
   }
 
   /* ...try open the file */
-  *fp=open_file(argv[1]);
+  fp=open_file(argv[1]);
+
+  printf("Lines: %zu\n", file_lines(fp));
   
 
   fclose(fp);

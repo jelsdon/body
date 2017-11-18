@@ -2,6 +2,15 @@
 #include <stdlib.h>
 
 #define PROGRAM_NAME "body"
+#define DEFBODY 10
+#define DEFOFF DEFBODY/2
+
+struct Middle {
+  size_t start;
+  size_t end;
+  size_t middle;
+  size_t lines;
+};
 
 void usage (int status) {
   printf ("Usage: %s [FILE]\n", PROGRAM_NAME);
@@ -48,9 +57,63 @@ size_t file_lines (FILE *fp) {
 
 }
 
+/* 
+  set_limits()
+  Sets Middle structure's start and end position
+  which ref where output (lines) should start and
+  end.
+*/
+// I'm going to have to deal with signed/unsigned sometime
+size_t set_limits(struct Middle* middle) {
+
+  middle->middle = middle->lines / 2;
+  
+  if( ((int)middle->middle - DEFOFF) < 1) {
+    middle->start = 1;
+  } else {
+    middle->start = (int)middle->middle - DEFOFF;
+  }
+
+  if( (middle->middle + DEFOFF) >= middle->lines) {
+    middle->end = middle->lines-1;
+  } else {
+    middle->end = middle->middle + DEFOFF;
+  }
+
+  return middle->lines;
+}
+
+/*
+  print_body()
+  Using details within the Middle struct, print line
+  starting from 'Middle.start' all the way through to
+  'Middle.end'.
+*/
+void print_body(FILE *fp, struct Middle* middle) {
+  ssize_t read;
+  size_t len = 0;
+  char *line = NULL;
+  size_t lines = 0;
+
+
+  // Reset to start of file
+  fseek( fp, 0, 0);
+  while ((read = getline(&line, &len, fp)) != -1) {
+    if(lines++ >= middle->start) {
+      printf("%s", line);
+    }
+
+    if(lines >= middle->end) {
+      break;
+    }
+
+  }
+
+}
 
 int main (int argc, char **argv) {
   FILE *fp;
+  struct Middle middle;
   size_t lines;
 
   if (argc != 2){
@@ -61,25 +124,30 @@ int main (int argc, char **argv) {
   /* ...try open the file */
   fp=open_file(argv[1]);
 
-  lines=file_lines(fp);
+  middle.lines=file_lines(fp);
 
-  if (lines == 0) {
+  if (middle.lines == 0) {
     printf("No lines in this file...\n");
     fclose(fp);
     exit(1);
   }
 
-  if (lines == 1) {
+  if (middle.lines == 1) {
     printf("Aint no body in this file...may I suggest cat?\n");
     fclose(fp);
     exit(1);
   }
 
-  if (lines == 2) {
+  if (middle.lines == 2) {
     printf("Aint no body in this file...may I suggest cat?\n");
     fclose(fp);
     exit(1);
   }
+
+  set_limits(&middle);
+  print_body(fp, &middle);
+
+  //printf("start %zu, middle %zu, end %zu\n", middle.start, middle.middle, middle.end);
 
   fclose(fp);
   return 0;

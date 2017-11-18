@@ -51,6 +51,7 @@ size_t file_lines (FILE *fp) {
 
 int main (int argc, char **argv) {
   FILE *fp;
+  size_t lines;
 
   if (argc != 2){
     printf("Only one file supported\n");
@@ -60,8 +61,25 @@ int main (int argc, char **argv) {
   /* ...try open the file */
   fp=open_file(argv[1]);
 
-  printf("Lines: %zu\n", file_lines(fp));
-  
+  lines=file_lines(fp);
+
+  if (lines == 0) {
+    printf("No lines in this file...\n");
+    fclose(fp);
+    exit(1);
+  }
+
+  if (lines == 1) {
+    printf("Aint no body in this file...may I suggest cat?\n");
+    fclose(fp);
+    exit(1);
+  }
+
+  if (lines == 2) {
+    printf("Aint no body in this file...may I suggest cat?\n");
+    fclose(fp);
+    exit(1);
+  }
 
   fclose(fp);
   return 0;

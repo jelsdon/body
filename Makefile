@@ -9,5 +9,10 @@ DEPS=
 body: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
+install: body
+	install -d /usr/local/bin
+	install -m 555 body /usr/local/bin/body
+
+
 clean:
 	rm -f *.o *~ core

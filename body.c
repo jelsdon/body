@@ -25,7 +25,7 @@ FILE* open_file (char *filename) {
   FILE *fp;
   fp=fopen(filename, "r");
   if (fp == NULL) {
-    printf("Err opening file\n");
+    fprintf( stderr, "Err opening file\n");
     exit(1);
   }
 
@@ -138,7 +138,7 @@ int main (int argc, char **argv) {
   middle.lines=file_lines(fp);
 
   if (middle.lines == 0 ) {
-    printf("No lines in this file...\n");
+    fprintf( stderr, "No lines in this file...\n");
     fclose(fp);
     exit(1);
   }
@@ -146,7 +146,7 @@ int main (int argc, char **argv) {
   if (middle.lines == 1 ||
       middle.lines == 2 ||
       middle.lines <= DEFBODY) {
-    printf("Aint no body in this file...may I suggest cat?\n");
+    fprintf( stderr, "Aint no body in this file...may I suggest cat?\n");
     fclose(fp);
     exit(1);
   }

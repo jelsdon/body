@@ -137,19 +137,15 @@ int main (int argc, char **argv) {
 
   middle.lines=file_lines(fp);
 
-  if (middle.lines == 0) {
+  if (middle.lines == 0 ) {
     printf("No lines in this file...\n");
     fclose(fp);
     exit(1);
   }
 
-  if (middle.lines == 1) {
-    printf("Aint no body in this file...may I suggest cat?\n");
-    fclose(fp);
-    exit(1);
-  }
-
-  if (middle.lines == 2) {
+  if (middle.lines == 1 ||
+      middle.lines == 2 ||
+      middle.lines <= DEFBODY) {
     printf("Aint no body in this file...may I suggest cat?\n");
     fclose(fp);
     exit(1);
@@ -157,6 +153,8 @@ int main (int argc, char **argv) {
 
   // set default 'middle' body position
   set_limits(&middle);
+
+  // If you want to test out the random handler, uncomment below.
   //set_random(&middle);
   print_body(fp, &middle);
 

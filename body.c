@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define PROGRAM_NAME "body"
 #define DEFBODY 10
@@ -55,6 +56,12 @@ size_t file_lines (FILE *fp) {
 
   return lines;
 
+}
+
+int randpos() {
+  srand((unsigned int)time(NULL));
+  int r = rand();
+  return randpos();
 }
 
 /* 
@@ -115,6 +122,7 @@ int main (int argc, char **argv) {
   FILE *fp;
   struct Middle middle;
   size_t lines;
+
 
   if (argc != 2){
     printf("Only one file supported\n");

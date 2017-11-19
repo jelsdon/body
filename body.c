@@ -58,10 +58,13 @@ size_t file_lines (FILE *fp) {
 
 }
 
-int randpos() {
+void set_random(struct Middle* middle) {
   srand((unsigned int)time(NULL));
-  int r = rand();
-  return randpos();
+
+  middle->middle=rand() % (((middle->lines - DEFOFF) ) - (DEFOFF + 1)) + (DEFOFF + 1);
+  middle->start=middle->middle - DEFOFF;
+  middle->end=middle->middle + DEFOFF;
+
 }
 
 /* 
@@ -152,10 +155,10 @@ int main (int argc, char **argv) {
     exit(1);
   }
 
+  // set default 'middle' body position
   set_limits(&middle);
+  //set_random(&middle);
   print_body(fp, &middle);
-
-  //printf("start %zu, middle %zu, end %zu\n", middle.start, middle.middle, middle.end);
 
   fclose(fp);
   return 0;

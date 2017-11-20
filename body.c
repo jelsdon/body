@@ -6,6 +6,8 @@
 #define DEFBODY 10
 #define DEFOFF DEFBODY/2
 
+typedef enum { false, true } bool;
+
 struct Middle {
   size_t start;
   size_t end;
@@ -125,16 +127,30 @@ int main (int argc, char **argv) {
   FILE *fp;
   struct Middle middle;
   size_t lines;
+  bool rand_mode=false;
 
+  // CLARG handler
+  if ( 1 < argc && argv[1][0] == '-' && argv[1][1] == 'r')
+  {
+    if (argc != 3){
+      printf("Only one file supported\n");
+      exit(1);
+    }
 
-  if (argc != 2){
-    printf("Only one file supported\n");
-    exit(1);
+    fp=open_file(argv[2]);
+
+    rand_mode = true;
+
+  } else {
+    if (argc != 2){
+      printf("Only one file supported\n");
+      exit(1);
+    }
+
+    fp=open_file(argv[1]);
   }
 
-  /* ...try open the file */
-  fp=open_file(argv[1]);
-
+  /* Count lines within file */
   middle.lines=file_lines(fp);
 
   if (middle.lines == 0 ) {
@@ -155,7 +171,9 @@ int main (int argc, char **argv) {
   set_limits(&middle);
 
   // If you want to test out the random handler, uncomment below.
-  //set_random(&middle);
+  if(rand_mode == true)
+    set_random(&middle);
+
   print_body(fp, &middle);
 
   fclose(fp);

@@ -16,8 +16,9 @@ struct Middle {
 };
 
 void usage (int status) {
-  printf ("Usage: %s [FILE]\n", PROGRAM_NAME);
-  printf ("Print the middlish part of the FILE to standard output.\n"); 
+  printf ("Usage: %s [options...] <file>\n", PROGRAM_NAME);
+  printf ("Options:\n"); 
+  printf (" -r        Randomly select body location of file (10 lines output)\n");
   exit (status);
 }
 
@@ -143,8 +144,8 @@ int main (int argc, char **argv) {
 
   } else {
     if (argc != 2){
-      printf("Only one file supported\n");
-      exit(1);
+      fprintf( stderr, "Please provide one file\n");
+      usage(1);
     }
 
     fp=open_file(argv[1]);
@@ -154,17 +155,17 @@ int main (int argc, char **argv) {
   middle.lines=file_lines(fp);
 
   if (middle.lines == 0 ) {
-    fprintf( stderr, "No lines in this file...\n");
+    fprintf( stderr, "This file is empty...\n");
     fclose(fp);
-    exit(1);
+    usage(1);
   }
 
   if (middle.lines == 1 ||
       middle.lines == 2 ||
       middle.lines <= DEFBODY) {
-    fprintf( stderr, "Aint no body in this file...may I suggest cat?\n");
+    fprintf( stderr, "No body in this file...may I suggest cat?\n");
     fclose(fp);
-    exit(1);
+    usage(1);
   }
 
   // set default 'middle' body position
